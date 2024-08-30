@@ -1,0 +1,13 @@
+/dist
+/node_modules
+.env
+.env.development
+.eslintrc.js
+.env.testing
+.env.production
+.env.qa
+launch.json
+.data
+coverage
+.cache
+newrelic_agent.log
