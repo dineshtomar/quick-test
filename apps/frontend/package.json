@@ -5,11 +5,12 @@
   "dependencies": {
     "@headlessui/react": "^2.0.4",
     "@heroicons/react": "2.0.18",
-    "react-zoom-pan-pinch": "3.4.4",
     "@reduxjs/toolkit": "^2.2.5",
     "@tippyjs/react": "4.2.6",
     "@types/react-csv": "1.1.10",
     "@types/react-i18next": "8.1.0",
+    "ajv": "^6.12.6",
+    "ajv-keywords": "^5.1.0",
     "axios": "1.7.2",
     "chart.js": "4.4.1",
     "dayjs": "1.11.11",
@@ -38,6 +39,7 @@
     "react-scripts": "5.0.1",
     "react-spinners": "0.14.1",
     "react-textarea-autosize": "8.5.3",
+    "react-zoom-pan-pinch": "3.4.4",
     "yup": "1.4.0"
   },
   "devDependencies": {
@@ -167,6 +169,9 @@
       "tailwindcss": "utility-first CSS framework for rapidly building custom user interfaces.",
       "typescript": "typescript library"
     }
+  },
+  "engines": {
+    "node": ">=18"
   },
   "sideEffects": [
     "./src/pages/i18n.js"
