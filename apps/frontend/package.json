@@ -170,6 +170,9 @@
       "typescript": "typescript library"
     }
   },
+  "engines": {
+    "node": "20.9.0"
+  },
   "sideEffects": [
     "./src/pages/i18n.js"
   ]
