@@ -1,6 +1,7 @@
 {
   "name": "bugplot-react",
   "version": "3.5.0-beta",
+  "author": "crownstack",
   "private": true,
   "dependencies": {
     "@headlessui/react": "^2.0.4",
