@@ -16,16 +16,18 @@ export class ResponseInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const request = context.switchToHttp().getRequest();
     const languageToTranslate = request.headers["accept-language"];
-  
+
     return next.handle().pipe(
       map(async (data) => {
         if (data) {
           data.message = await this.i18n.translate(data.message, {
-            lang: ALLOWED_LANGUAGES.includes(languageToTranslate) ? languageToTranslate: 'en',
+            lang: ALLOWED_LANGUAGES.includes(languageToTranslate)
+              ? languageToTranslate
+              : "en",
           });
-          return data;        
+          return data;
         }
-      })
+      }),
     );
   }
 }

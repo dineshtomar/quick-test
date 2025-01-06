@@ -10,31 +10,32 @@ import { AllConfigType } from "../../config/config.type";
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-    constructor(
-        public readonly configService: ConfigService<AllConfigType>,
-        public readonly userReadService: UserReadService,
-        private readonly permissionService: PermissionService,
-    ) {
-        super({
-            jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-            secretOrKey: configService.get('app.jwtKey', {infer: true}),
-        });
-    }
+  constructor(
+    public readonly configService: ConfigService<AllConfigType>,
+    public readonly userReadService: UserReadService,
+    private readonly permissionService: PermissionService,
+  ) {
+    super({
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      secretOrKey: configService.get("app.jwtKey", { infer: true }),
+    });
+  }
 
-    async validate({ iat, exp, id: userId }) {
-        const timeDiff = exp - iat;
-        if (timeDiff <= 0) {
-            throw new UnauthorizedException();
-        }
-        const user = await this.userReadService.findUserById(userId, 'organization');
-        if (!user) {
-            throw new UnauthorizedException();
-        }
-        const permissions = (
-            await this.permissionService.findAllPermissionsByRoleId(
-              user.roleId,
-            )
-          ).map(permission => permission.permissionName);
-        return ({ user, permissions });
+  async validate({ iat, exp, id: userId }) {
+    const timeDiff = exp - iat;
+    if (timeDiff <= 0) {
+      throw new UnauthorizedException();
     }
+    const user = await this.userReadService.findUserById(
+      userId,
+      "organization",
+    );
+    if (!user) {
+      throw new UnauthorizedException();
+    }
+    const permissions = (
+      await this.permissionService.findAllPermissionsByRoleId(user.roleId)
+    ).map((permission) => permission.permissionName);
+    return { user, permissions };
+  }
 }

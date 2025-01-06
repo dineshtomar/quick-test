@@ -3,12 +3,12 @@ import {
   NestInterceptor,
   ExecutionContext,
   CallHandler,
-} from '@nestjs/common';
-import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+} from "@nestjs/common";
+import { Observable } from "rxjs";
+import { tap } from "rxjs/operators";
 
-const util = require('util');
-const newrelic = require('newrelic');
+const util = require("util");
+const newrelic = require("newrelic");
 
 @Injectable()
 export class NewrelicInterceptor implements NestInterceptor {

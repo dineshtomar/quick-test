@@ -1,4 +1,4 @@
 export enum PermissionType {
-    BACKEND = 'backend',
-    WEB = 'web',
-  }  
+  BACKEND = "backend",
+  WEB = "web",
+}

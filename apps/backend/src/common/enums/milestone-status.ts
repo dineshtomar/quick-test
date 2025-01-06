@@ -1,5 +1,5 @@
 export enum MilestoneStatus {
-    START = "START",
-    OPEN = "OPEN",
-    COMPLETED = "COMPLETED",
+  START = "START",
+  OPEN = "OPEN",
+  COMPLETED = "COMPLETED",
 }

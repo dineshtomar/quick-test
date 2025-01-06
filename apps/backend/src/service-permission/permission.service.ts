@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { Permission } from './permission.entity';
+import { Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { Permission } from "./permission.entity";
 
 @Injectable()
 export class PermissionService {
@@ -11,22 +11,20 @@ export class PermissionService {
   ) {}
 
   // Get all permissions
-  async findAllPermissions(type = 'web'): Promise<Permission[]> {
+  async findAllPermissions(type = "web"): Promise<Permission[]> {
     return this.permissionRepository
-      .createQueryBuilder('permissions')
-      .select('permissions.permissionName')
-      .where('permissions.type = :type', { type })
+      .createQueryBuilder("permissions")
+      .select("permissions.permissionName")
+      .where("permissions.type = :type", { type })
       .getMany();
   }
 
   // Get all permission for a specific role Id
-  async findAllPermissionsByRoleId(
-    roleId: number,
-  ): Promise<Permission[]> {
+  async findAllPermissionsByRoleId(roleId: number): Promise<Permission[]> {
     return this.permissionRepository
-      .createQueryBuilder('permissions')
-      .select('permissions.permissionName')
-      .where('permissions.roleId = :roleId', { roleId })
+      .createQueryBuilder("permissions")
+      .select("permissions.permissionName")
+      .where("permissions.roleId = :roleId", { roleId })
       .getMany();
   }
 }

@@ -1,6 +1,6 @@
-import { registerAs } from '@nestjs/config';
-import { AppConfig } from './config.type';
-import validateConfig from '../_helpers/validate-config';
+import { registerAs } from "@nestjs/config";
+import { AppConfig } from "./config.type";
+import validateConfig from "../_helpers/validate-config";
 
 import {
   IsEnum,
@@ -10,19 +10,18 @@ import {
   IsString,
   Max,
   Min,
-} from 'class-validator';
+} from "class-validator";
 
 enum Environment {
-  Production = 'production',
-  Test = 'test',
-  Local = 'development',
+  Production = "production",
+  Test = "test",
+  Local = "development",
 }
 
 class EnvironmentVariablesValidator {
-
   @IsEnum(Environment)
   @IsOptional()
-  NODE_ENV: Environment;  
+  NODE_ENV: Environment;
 
   @IsInt()
   @Min(0)
@@ -44,7 +43,6 @@ class EnvironmentVariablesValidator {
   @IsOptional()
   FALLBACK_LANGUAGE: string;
 
-
   @IsNumber()
   @IsOptional()
   JWT_EXPIRATION_TIME: number;
@@ -56,20 +54,23 @@ class EnvironmentVariablesValidator {
   @IsString()
   @IsOptional()
   JWT_SECRET_KEY: string;
-
 }
 
-export default registerAs<AppConfig>('app', () => {
-  validateConfig(process.env, EnvironmentVariablesValidator)
+export default registerAs<AppConfig>("app", () => {
+  validateConfig(process.env, EnvironmentVariablesValidator);
 
   return {
-    nodeEnv: process.env.NODE_ENV, 
+    nodeEnv: process.env.NODE_ENV,
     webUrl: process.env.WEB_URL,
-    port: process.env.PORT ? parseInt(process.env.PORT, 10): process.env.PORT? parseInt(process.env.TRANSPORT_PORT, 10) : 3001,
-    apiPrefix: process.env.API_PREFIX || 'v1',
-    fallbackLanguage: process.env.APP_FALLBACK_LANGUAGE || 'en',
-    headerLanguage: process.env.APP_HEADER_LANGUAGE || 'x-custom-lang',
+    port: process.env.PORT
+      ? parseInt(process.env.PORT, 10)
+      : process.env.PORT
+        ? parseInt(process.env.TRANSPORT_PORT, 10)
+        : 3001,
+    apiPrefix: process.env.API_PREFIX || "v1",
+    fallbackLanguage: process.env.APP_FALLBACK_LANGUAGE || "en",
+    headerLanguage: process.env.APP_HEADER_LANGUAGE || "x-custom-lang",
     jwtKey: process.env.JWT_SECRET_KEY,
-    jwtExpirationTime : parseInt(process.env.JWT_EXPIRATION_TIME )
+    jwtExpirationTime: parseInt(process.env.JWT_EXPIRATION_TIME),
   };
 });

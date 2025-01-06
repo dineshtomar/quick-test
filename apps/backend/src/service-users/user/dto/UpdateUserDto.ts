@@ -30,7 +30,7 @@ export class UpdateUserDto {
 
   @Matches(
     /^[^<>()[\]?"'|+=/{}\\,;:\%#^\s@\"$&!@]+@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z0-9]+\.)+[a-zA-Z]{2,}))$/,
-    { message: "Email format is not correct" }
+    { message: "Email format is not correct" },
   )
   @IsNotEmpty({ message: "Email cannot be empty" })
   @IsOptional()
@@ -92,10 +92,10 @@ export class UpdateUserDto {
   language: string[];
 }
 
-export class UpdateUserSwagger{
+export class UpdateUserSwagger {
   @ApiProperty()
   user: UpdateUserDto;
 
   @ApiProperty()
-  organization : string
+  organization: string;
 }

@@ -9,58 +9,48 @@ import { ProjectEntity } from "../../project.entity";
 import { TestCaseResultEntity } from "../../../test-suite/test-case-result/test-case-result.entity";
 
 export class ActivityDto extends AbstractDto {
+  @ApiProperty({
+    type: String,
+  })
+  name: string;
 
-    @ApiProperty({
-        type: String
-    })
-    name: string;
+  @ApiProperty({
+    type: String,
+  })
+  entity: () => ActivityEntityType;
 
-    @ApiProperty({
-        type: String
-    })
-    entity: () => ActivityEntityType; 
+  @ApiProperty({
+    type: String,
+  })
+  status: string;
 
-    @ApiProperty({
-        type: String
-    })
-    status: string;
+  @ApiPropertyOptional({
+    type: String,
+  })
+  action: string;
 
-    @ApiPropertyOptional({
-        type: String
-    })
-    action: string;
+  user: UserEntity;
 
-    user: UserEntity;
+  testSuite: TestSuiteEntity;
 
-    testSuite: TestSuiteEntity;
+  project: ProjectEntity;
 
-    project: ProjectEntity;
+  milestone: MilestoneEntity;
 
-    milestone: MilestoneEntity;
+  testCaseResult: TestCaseResultEntity;
 
-    testCaseResult: TestCaseResultEntity;
-
-    constructor(activity: ActivityEntity) {
-        super(activity);
-        this.name = activity.name;
-        this.entity = activity.entity;
-        this.status = activity.status;
-        this.action = activity.action;
-        this.milestone = activity.milestone?
-            activity.milestone
-            : null;
-        this.user = activity.user?
-            activity.user
-            : null;
-        this.testSuite = activity.testSuite?
-            activity.testSuite
-            : null;
-        this.project = activity.project?
-            activity.project
-            : null;
-        this.testCaseResult = activity.testCaseResult?
-            activity.testCaseResult
-            : null;
-    }
+  constructor(activity: ActivityEntity) {
+    super(activity);
+    this.name = activity.name;
+    this.entity = activity.entity;
+    this.status = activity.status;
+    this.action = activity.action;
+    this.milestone = activity.milestone ? activity.milestone : null;
+    this.user = activity.user ? activity.user : null;
+    this.testSuite = activity.testSuite ? activity.testSuite : null;
+    this.project = activity.project ? activity.project : null;
+    this.testCaseResult = activity.testCaseResult
+      ? activity.testCaseResult
+      : null;
+  }
 }
-

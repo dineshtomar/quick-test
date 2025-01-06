@@ -6,23 +6,21 @@ import { ProjectDto } from "../../project/dto/ProjectDto";
 import { UserDto } from "../../../service-users/user/dto/UserDto";
 
 export class OrganizationListDto extends AbstractDto {
-    @ApiProperty()
-    name: string;
+  @ApiProperty()
+  name: string;
 
-    @ApiProperty()
-    projects: ProjectDto[];
+  @ApiProperty()
+  projects: ProjectDto[];
 
-    @ApiProperty()
-    members: UserDto[];
+  @ApiProperty()
+  members: UserDto[];
 
-    constructor(organization: OrganizationEntity) {
-        super(organization);
-        this.name = organization.name;
-        this.projects = organization.projects?
-            organization.projects.toDtos()
-            : null;
-        this.members = organization.members?
-            organization.members.toDtos()
-            : null;
-    }
+  constructor(organization: OrganizationEntity) {
+    super(organization);
+    this.name = organization.name;
+    this.projects = organization.projects
+      ? organization.projects.toDtos()
+      : null;
+    this.members = organization.members ? organization.members.toDtos() : null;
+  }
 }

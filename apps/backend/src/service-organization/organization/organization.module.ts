@@ -9,14 +9,14 @@ import { OrganizationEntity } from "./organization.entity";
 import { ProjecMemberEntity } from "../project/members/projectMember.entity";
 
 @Module({
-    imports: [
-        forwardRef(() => AuthModule),
-        forwardRef(() => ProjectModule),
-        forwardRef(() => UserModule),
-        TypeOrmModule.forFeature([OrganizationEntity, ProjecMemberEntity]),
-    ],
-    controllers: [OrganizationController],
-    exports: [OrganizationService],
-    providers: [OrganizationService],
+  imports: [
+    forwardRef(() => AuthModule),
+    forwardRef(() => ProjectModule),
+    forwardRef(() => UserModule),
+    TypeOrmModule.forFeature([OrganizationEntity, ProjecMemberEntity]),
+  ],
+  controllers: [OrganizationController],
+  exports: [OrganizationService],
+  providers: [OrganizationService],
 })
 export class OrganizationModule {}

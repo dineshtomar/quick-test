@@ -1,27 +1,25 @@
-import 'reflect-metadata';
-import { DataSource, DataSourceOptions } from 'typeorm';
-import { SnakeNamingStrategy } from './snake-naming.strategy';
+import "reflect-metadata";
+import { DataSource, DataSourceOptions } from "typeorm";
+import { SnakeNamingStrategy } from "./snake-naming.strategy";
 
 export const AppDataSource = new DataSource({
   type: process.env.DB_TYPE,
   url: process.env.DB_URL,
   host: process.env.DB_HOST,
-  port: process.env.DB_PORT
-    ? parseInt(process.env.DB_PORT, 10)
-    : 5432,
+  port: process.env.DB_PORT ? parseInt(process.env.DB_PORT, 10) : 5432,
   username: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
-  synchronize: process.env.DB_SYNCHRONIZE === 'true',
+  synchronize: process.env.DB_SYNCHRONIZE === "true",
   dropSchema: false,
   keepConnectionAlive: true,
-  logging: process.env.NODE_ENV !== 'production',
-  entities: [__dirname + '/../**/*.entity{.ts,.js}'],
-  migrations: [__dirname + '/migrations/**/*{.ts,.js}'],
+  logging: process.env.NODE_ENV !== "production",
+  entities: [__dirname + "/../**/*.entity{.ts,.js}"],
+  migrations: [__dirname + "/migrations/**/*{.ts,.js}"],
   cli: {
-    entitiesDir: 'src',
-    migrationsDir: 'src/database/migrations',
-    subscribersDir: 'subscriber',
+    entitiesDir: "src",
+    migrationsDir: "src/database/migrations",
+    subscribersDir: "subscriber",
   },
   namingStrategy: new SnakeNamingStrategy(),
   extra: {
@@ -31,10 +29,9 @@ export const AppDataSource = new DataSource({
       ? parseInt(process.env.DB_MAX_CONNECTIONS, 10)
       : 100,
     ssl:
-      process.env.DB_SSL_ENABLED === 'true'
+      process.env.DB_SSL_ENABLED === "true"
         ? {
-            rejectUnauthorized:
-              process.env.DB_REJECT_UNAUTHORIZED === 'true',
+            rejectUnauthorized: process.env.DB_REJECT_UNAUTHORIZED === "true",
             ca: process.env.DB_CA ?? undefined,
             key: process.env.DB_KEY ?? undefined,
             cert: process.env.DB_CERT ?? undefined,

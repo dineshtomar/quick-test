@@ -1,4 +1,4 @@
-import { RoleType } from '../../../common/enums/role-type';
+import { RoleType } from "../../../common/enums/role-type";
 
 export const roles = {
   [RoleType.SUPERADMIN]: 1,

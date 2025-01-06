@@ -8,21 +8,24 @@ import { TestCaseResultEntity } from "../test-suite/test-case-result/test-case-r
 import { Relation } from "typeorm";
 
 @Entity({ name: "defects" })
-export class DefectEntity extends AbstractEntity<DefectDto>{
-    @Column({ default: null })
-    pluginKey: string;
-    
-    @Column({ default: null })
-    pluginId: string;
-    
-    @OneToMany(() => TestCaseEntity, testcases => testcases.defect)
-    testcases: TestCaseEntity[];
+export class DefectEntity extends AbstractEntity<DefectDto> {
+  @Column({ default: null })
+  pluginKey: string;
 
-    @OneToMany(() => TestCaseResultEntity, testCaseResults => testCaseResults.defect)
-    testCaseResults: TestCaseResultEntity[];
+  @Column({ default: null })
+  pluginId: string;
 
-    @ManyToOne(() => PluginConfigEntity, pluginConfig => pluginConfig.defects)
-    pluginConfig: Relation<PluginConfigEntity>;
+  @OneToMany(() => TestCaseEntity, (testcases) => testcases.defect)
+  testcases: TestCaseEntity[];
 
-    dtoClass = DefectDto;
+  @OneToMany(
+    () => TestCaseResultEntity,
+    (testCaseResults) => testCaseResults.defect,
+  )
+  testCaseResults: TestCaseResultEntity[];
+
+  @ManyToOne(() => PluginConfigEntity, (pluginConfig) => pluginConfig.defects)
+  pluginConfig: Relation<PluginConfigEntity>;
+
+  dtoClass = DefectDto;
 }

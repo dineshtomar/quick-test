@@ -23,14 +23,14 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+    - uses: oven-sh/setup-bun@v1
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
-        cache: 'yarn'
     - run: |
-          if [ -f yarn.lock ]; then
-            rm yarn.lock
-          fi
-    - run: yarn install
-    - run: yarn build
+        if [ -f bun.lockb ]; then
+          rm bun.lockb
+        fi
+    - run: bun install
+    - run: bun run build

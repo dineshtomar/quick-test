@@ -1,22 +1,22 @@
 import { ResponseFormatter } from "../interfaces/response.interface";
 
 export class ResponseError implements ResponseFormatter {
-    constructor(infoMessage: string, data?: any, errCode?: number) {
-        this.success = false;
-        this.message = infoMessage;
-        this.data = data;
-        this.errCode = errCode;
-    }
+  constructor(infoMessage: string, data?: any, errCode?: number) {
+    this.success = false;
+    this.message = infoMessage;
+    this.data = data;
+    this.errCode = errCode;
+  }
 
-    message: string;
+  message: string;
 
-    data: any[];
+  data: any[];
 
-    errorMessage: any;
+  errorMessage: any;
 
-    error: any;
+  error: any;
 
-    success: boolean;
+  success: boolean;
 
-    errCode: number;
+  errCode: number;
 }

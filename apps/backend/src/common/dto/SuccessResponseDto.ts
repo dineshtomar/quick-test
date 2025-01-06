@@ -1,30 +1,30 @@
 import { ResponseFormatter } from "../interfaces/response.interface";
 
 export class ResponseSuccess implements ResponseFormatter {
-    constructor(infoMessage: string, data?: any, notLog?: boolean) {
-        this.success = true;
-        this.message = infoMessage;
-        this.data = data;
-        
-        if (!notLog) {
-            try {
-                const offuscateRequest = JSON.parse(JSON.stringify(data));
-                if (offuscateRequest && offuscateRequest.token) {
-                    offuscateRequest.token = "*******";
-                }
-            } catch (error) {}
+  constructor(infoMessage: string, data?: any, notLog?: boolean) {
+    this.success = true;
+    this.message = infoMessage;
+    this.data = data;
+
+    if (!notLog) {
+      try {
+        const offuscateRequest = JSON.parse(JSON.stringify(data));
+        if (offuscateRequest && offuscateRequest.token) {
+          offuscateRequest.token = "*******";
         }
+      } catch (error) {}
     }
+  }
 
-     message: string;
+  message: string;
 
-     data: any[];
+  data: any[];
 
-     errorMessage: any;
+  errorMessage: any;
 
-     error: any;
+  error: any;
 
-     success: boolean;
+  success: boolean;
 
-    errCode: number;
+  errCode: number;
 }

@@ -1,7 +1,7 @@
 /* tslint:disable:naming-convention */
 
-import { Transform } from 'class-transformer';
-import _ = require('lodash');
+import { Transform } from "class-transformer";
+import _ = require("lodash");
 
 /**
  * @description trim spaces from start and end, replace multiple spaces with one.
@@ -14,12 +14,12 @@ import _ = require('lodash');
  * @constructor
  */
 export function Trim() {
-    return Transform(({ value }) => {
-        if (_.isArray(value)) {
-            return value.map((v) => _.trim(v).replace(/\s\s+/g, ' '));
-        }
-        return _.trim(value).replace(/\s\s+/g, ' ');
-    });
+  return Transform(({ value }) => {
+    if (_.isArray(value)) {
+      return value.map((v) => _.trim(v).replace(/\s\s+/g, " "));
+    }
+    return _.trim(value).replace(/\s\s+/g, " ");
+  });
 }
 
 /**
@@ -32,7 +32,7 @@ export function Trim() {
  * @constructor
  */
 export function ToInt() {
-    return Transform(({ value }) => parseInt(value, 10), { toClassOnly: true });
+  return Transform(({ value }) => parseInt(value, 10), { toClassOnly: true });
 }
 
 /**
@@ -44,13 +44,13 @@ export function ToInt() {
  * @constructor
  */
 export function ToArray(): (target: any, key: string) => void {
-    return Transform(
-        (value) => {
-            if (_.isNil(value)) {
-                return [];
-            }
-            return _.castArray(value);
-        },
-        { toClassOnly: true },
-    );
+  return Transform(
+    (value) => {
+      if (_.isNil(value)) {
+        return [];
+      }
+      return _.castArray(value);
+    },
+    { toClassOnly: true },
+  );
 }

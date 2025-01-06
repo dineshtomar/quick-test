@@ -5,7 +5,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4      
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v1
       - name: Delpoying backend changes on Dev server(testbox)
         env:
           Host: ${{ secrets.DEV_SERVER_IP }}
@@ -20,4 +21,4 @@ jobs:
           echo "Creating/Removing stage folder."
           ssh -i "dev_key.pem" $allowSSHFlag $User@$Host "ls -lrt"
           ssh -i "dev_key.pem" $allowSSHFlag $User@$Host "cd dev/ssh/testbox-backend/;git checkout dev; git pull origin dev" 
-          ssh -i "dev_key.pem" $allowSSHFlag $User@$Host "cd dev/ssh/testbox-backend/; yarn install; pm2 restart dev-testbox" 
+          ssh -i "dev_key.pem" $allowSSHFlag $User@$Host "cd dev/ssh/testbox-backend/; bun install; pm2 restart dev-testbox" 

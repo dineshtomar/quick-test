@@ -1,8 +1,7 @@
-import { Injectable } from '@nestjs/common';
-import { InjectConnection, InjectRepository } from '@nestjs/typeorm';
-import { Connection, EntitySubscriberInterface, Repository } from 'typeorm';
-import { UserEntity } from './user.entity';
-
+import { Injectable } from "@nestjs/common";
+import { InjectConnection, InjectRepository } from "@nestjs/typeorm";
+import { Connection, EntitySubscriberInterface, Repository } from "typeorm";
+import { UserEntity } from "./user.entity";
 
 @Injectable()
 export class UserSubscriber implements EntitySubscriberInterface {
@@ -10,7 +9,7 @@ export class UserSubscriber implements EntitySubscriberInterface {
     @InjectConnection() readonly connection: Connection,
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
-   ) {
+  ) {
     connection.subscribers.push(this);
   }
 
@@ -27,14 +26,15 @@ export class UserSubscriber implements EntitySubscriberInterface {
   async afterLoad(user: UserEntity) {
     let fullName: string;
     if (user.archivedBy) {
-        const queryBuilder = this.userRepository.createQueryBuilder('user');
-        const archivedByUser = await queryBuilder.where('user.id = :id', { id: user.archivedBy })
-            .getOne();
-        user.archivedByUser = archivedByUser;
+      const queryBuilder = this.userRepository.createQueryBuilder("user");
+      const archivedByUser = await queryBuilder
+        .where("user.id = :id", { id: user.archivedBy })
+        .getOne();
+      user.archivedByUser = archivedByUser;
     }
     if (user && user.firstName) {
       fullName = user.lastName
-        ? user.firstName.concat(' ').concat(user.lastName)
+        ? user.firstName.concat(" ").concat(user.lastName)
         : user.firstName;
       Object.assign(user, { fullName });
     } else {

@@ -11,16 +11,16 @@ import { PaymentModule } from "../../service-organization/payment/payment.module
 import { UserEntity } from "../../service-users/user/user.entity";
 
 @Module({
-    imports: [
-        forwardRef(() => UserModule),
-        forwardRef(() => EmailModule),
-        forwardRef(() => PermissionModule),
-        forwardRef(() => PaymentModule),
-        PassportModule.register({ defaultStrategy: "jwt" }),
-        TypeOrmModule.forFeature([UserEntity]),
-    ],
-    controllers: [AuthController],
-    providers: [AuthService, JwtStrategy],
-    exports: [PassportModule.register({ defaultStrategy: "jwt" }), AuthService],
+  imports: [
+    forwardRef(() => UserModule),
+    forwardRef(() => EmailModule),
+    forwardRef(() => PermissionModule),
+    forwardRef(() => PaymentModule),
+    PassportModule.register({ defaultStrategy: "jwt" }),
+    TypeOrmModule.forFeature([UserEntity]),
+  ],
+  controllers: [AuthController],
+  providers: [AuthService, JwtStrategy],
+  exports: [PassportModule.register({ defaultStrategy: "jwt" }), AuthService],
 })
 export class AuthModule {}
