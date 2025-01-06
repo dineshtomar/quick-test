@@ -9,7 +9,7 @@
     "backend:build:prod": "nx build quick-test-backend",
     "backend:start:prod": "nx start:prod quick-test-backend",
     "frontend:build:prod": "nx build quick-test-frontend",
-    "frontend:start:prod": "nx run release quick-test-frontend"
+    "frontend:start:prod": "nx run quick-test-frontend:release"
   },
   "private": true,
   "dependencies": {
