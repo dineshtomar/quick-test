@@ -78,13 +78,13 @@ export class TestSuiteEntity extends AbstractEntity<TestSuiteDto> {
   @OneToMany(
     () => TestCaseResultEntity,
     (testresults) => testresults.testsuite,
-    { cascade: true }
+    { cascade: true },
   )
   testresults: TestCaseResultEntity[];
 
   @Column({
     type: "enum",
-    enum:  TestSuiteStatus,
+    enum: TestSuiteStatus,
     default: TestSuiteStatus.PENDING,
   })
   status: TestSuiteStatus;

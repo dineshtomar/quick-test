@@ -1,7 +1,7 @@
 import { unlink, writeFileSync, readFileSync } from "fs";
 import { Injectable } from "@nestjs/common";
-import type { BrowserContext } from 'puppeteer';
-import { InjectContext } from "nest-puppeteer";
+// import type { BrowserContext } from "puppeteer";
+// import { InjectContext } from "nest-puppeteer";
 import { AwsS3Service } from "./aws-s3.service";
 import { AppConfigService } from "./app.config.service";
 import { ProjectEntity } from "../../service-organization/project/project.entity";
@@ -9,32 +9,44 @@ import { TestSuiteEntity } from "../../service-organization/test-suite/test-suit
 import { TestCaseResultStatus } from "../../common/enums/test-case-result-status";
 import { TestSuiteStatus } from "../../common/enums/test-suite-status";
 import { UtilsService } from "../../_helpers/utils.service";
-
-
+import { chromium } from 'playwright';
 
 @Injectable()
 export class PdfService {
     constructor(
         private readonly awsS3Service: AwsS3Service,
         private readonly appConfigService: AppConfigService,
-        @InjectContext() private readonly browserContext: BrowserContext
     ) { }
+    private browser
+    async init() {
+        this.browser = await chromium.launch();
+    }
+
+    async getPage() {
+        if (!this.browser) {
+            await this.init();
+        }
+        return await this.browser.newPage();
+    }
+
+    async close() {
+        if (this.browser) {
+            await this.browser.close();
+        }
+    }
 
     /**
      * Internal method to generate test cases pdf
      * and forward it to aws service to store in s3
      */
-    async generateTestCasesPdf(
-        project: ProjectEntity,
-        testCasesObject
-    ) {
+    async generateTestCasesPdf(project: ProjectEntity, testCasesObject) {
         const { pdfConfig } = this.appConfigService;
         const pdfCommonConfig = pdfConfig?.common;
         const pdfTestCaseConfig = pdfConfig?.testCase;
         const projectName = project.name.replace(/\s/g, "_");
         const pdfName = `${projectName}_`.concat(pdfTestCaseConfig.fileName);
 
-        let text = '';
+        let text = "";
         let sectionCount = 1;
         for (const sectionName in testCasesObject) {
             const testCases = testCasesObject[sectionName];
@@ -123,7 +135,11 @@ export class PdfService {
         `;
         const buffer = await this.generatePdf(pdfName, content);
         let key;
-        const file = UtilsService.createUploadableFile(pdfName, pdfCommonConfig, buffer);
+        const file = UtilsService.createUploadableFile(
+            pdfName,
+            pdfCommonConfig,
+            buffer,
+        );
         key = await this.awsS3Service.uploadPdf(file);
         unlink(`${pdfName}.html`, () => { });
         return key;
@@ -131,14 +147,14 @@ export class PdfService {
 
     async generatePdf(pdfName, htmlContent) {
         writeFileSync(`${pdfName}.html`, htmlContent);
-        const page = await this.browserContext.newPage();
-        const html = readFileSync(`${pdfName}.html`, 'utf-8');
-        await page.setContent(html, { waitUntil: 'domcontentloaded' });
-        await page.emulateMediaType('screen');
+        const page = await this.getPage();
+        const html = readFileSync(`${pdfName}.html`, "utf-8");
+        await page.setContent(html, { waitUntil: "domcontentloaded" });
+        await page.emulateMediaType("screen");
         const pdf = await page.pdf({
-            margin: { top: '30px', right: '30px', bottom: '30px', left: '30px' },
+            margin: { top: "30px", right: "30px", bottom: "30px", left: "30px" },
             printBackground: true,
-            format: 'A4',
+            format: "A4",
         });
         return pdf;
     }
@@ -149,7 +165,7 @@ export class PdfService {
      */
     async generateTestSuitesPdf(
         project: ProjectEntity,
-        testSuites: TestSuiteEntity[]
+        testSuites: TestSuiteEntity[],
     ) {
         const { pdfConfig } = this.appConfigService;
         const pdfCommonConfig = pdfConfig?.common;
@@ -157,27 +173,33 @@ export class PdfService {
         const projectName = project.name.replace(/\s/g, "_");
         const pdfName = `${projectName}_`.concat(pdfTestSuiteConfig.fileName);
 
-        let text = '';
+        let text = "";
         for (let i = 0; i < testSuites.length; i++) {
             text += `<h3 class="sectionName">${i + 1}. ${testSuites[i].name}</h3>`;
-            let className = 'pending';
-            const status = testSuites[i].status === TestSuiteStatus.INPROGRESS
-                ? (`${testSuites[i].status.charAt(0) + testSuites[i].status.charAt(1).toLowerCase()
-                    } ${testSuites[i].status.charAt(2)
-                    }${testSuites[i].status.substring(3, testSuites[i].status.length).toLowerCase()}`)
-                : testSuites[i].status.charAt(0) + testSuites[i].status.substring(1, testSuites[i].status.length).toLowerCase();
+            let className = "pending";
+            const status =
+                testSuites[i].status === TestSuiteStatus.INPROGRESS
+                    ? `${testSuites[i].status.charAt(0) +
+                    testSuites[i].status.charAt(1).toLowerCase()
+                    } ${testSuites[i].status.charAt(2)}${testSuites[i].status
+                        .substring(3, testSuites[i].status.length)
+                        .toLowerCase()}`
+                    : testSuites[i].status.charAt(0) +
+                    testSuites[i].status
+                        .substring(1, testSuites[i].status.length)
+                        .toLowerCase();
             switch (testSuites[i].status) {
                 case TestSuiteStatus.INPROGRESS:
-                    className = 'inProgress';
+                    className = "inProgress";
                     break;
                 case TestSuiteStatus.PENDING:
-                    className = 'pending';
+                    className = "pending";
                     break;
                 case TestSuiteStatus.COMPLETED:
-                    className = 'completed';
+                    className = "completed";
                     break;
                 default:
-                    className = 'pending';
+                    className = "pending";
             }
             text += `<table class="table table table-bordered table-striped table-sm">
                         <thead>
@@ -276,7 +298,11 @@ export class PdfService {
         `;
         const buffer = await this.generatePdf(pdfName, content);
         let key;
-        const file = UtilsService.createUploadableFile(pdfName, pdfCommonConfig, buffer)
+        const file = UtilsService.createUploadableFile(
+            pdfName,
+            pdfCommonConfig,
+            buffer,
+        );
         key = await this.awsS3Service.uploadPdf(file);
         unlink(`${pdfName}.html`, () => { });
         return key;
@@ -289,40 +315,57 @@ export class PdfService {
     async generateTestSuiteResultPdf(
         project: ProjectEntity,
         testSuite: TestSuiteEntity,
-        testCaseResultsObject
+        testCaseResultsObject,
     ) {
         const { pdfConfig } = this.appConfigService;
         const pdfCommonConfig = pdfConfig?.common;
         const pdfTestSuiteResultConfig = pdfConfig?.testSuiteResult;
         const projectName = project.name.replace(/\s/g, "_");
         const pdfName = `${projectName}_`.concat(pdfTestSuiteResultConfig.fileName);
-        const month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-        const statusTestRun = testSuite.status === TestSuiteStatus.INPROGRESS
-            ? (`${testSuite.status.charAt(0) + testSuite.status.charAt(1).toLowerCase()
-                } ${testSuite.status.charAt(2)
-                }${testSuite.status.substring(3, testSuite.status.length).toLowerCase()}`)
-            : testSuite.status.charAt(0) + testSuite.status.substring(1, testSuite.status.length).toLowerCase();
-        let statusClassName = 'pending';
+        const month = [
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December",
+        ];
+        const statusTestRun =
+            testSuite.status === TestSuiteStatus.INPROGRESS
+                ? `${testSuite.status.charAt(0) +
+                testSuite.status.charAt(1).toLowerCase()
+                } ${testSuite.status.charAt(2)}${testSuite.status
+                    .substring(3, testSuite.status.length)
+                    .toLowerCase()}`
+                : testSuite.status.charAt(0) +
+                testSuite.status.substring(1, testSuite.status.length).toLowerCase();
+        let statusClassName = "pending";
         switch (testSuite.status) {
             case TestSuiteStatus.INPROGRESS:
-                statusClassName = 'inProgress';
+                statusClassName = "inProgress";
                 break;
             case TestSuiteStatus.PENDING:
-                statusClassName = 'pending';
+                statusClassName = "pending";
                 break;
             case TestSuiteStatus.COMPLETED:
-                statusClassName = 'completed';
+                statusClassName = "completed";
                 break;
             default:
-                statusClassName = 'pending';
+                statusClassName = "pending";
         }
         const { passed, failed, untested, blocked, total } = testSuite.testreport;
         const passedResultPercentage = Math.ceil((passed * 100) / total);
         const failedResultPercentage = Math.ceil((failed * 100) / total);
-        const blocekdResultPercentage = Math.ceil((blocked*100)/ total);
-        const untestedResultPercentage = Math.ceil((untested*100)/total);
+        const blocekdResultPercentage = Math.ceil((blocked * 100) / total);
+        const untestedResultPercentage = Math.ceil((untested * 100) / total);
         let sectionCount = 1;
-        let text = '';
+        let text = "";
         for (const sectionName in testCaseResultsObject) {
             const testCaseResults = testCaseResultsObject[sectionName];
             text += `<h3 class="sectionNameOther">${sectionCount}. ${sectionName}</h3>
@@ -336,22 +379,22 @@ export class PdfService {
                     </thead>
                     <tbody>`;
             for (let i = 0; i < testCaseResults.length; i++) {
-                let className = '';
+                let className = "";
                 switch (testCaseResults[i].status) {
                     case TestCaseResultStatus.PASSED:
-                        className = 'passed';
+                        className = "passed";
                         break;
                     case TestCaseResultStatus.FAILED:
-                        className = 'failed';
+                        className = "failed";
                         break;
                     case TestCaseResultStatus.BLOCKED:
-                        className = 'blocked';
+                        className = "blocked";
                         break;
                     case TestCaseResultStatus.UNTESTED:
-                        className = 'untested';
+                        className = "untested";
                         break;
                     default:
-                        className = 'untested';
+                        className = "untested";
                         break;
                 }
                 text += `<tr>
@@ -464,7 +507,8 @@ export class PdfService {
                                     <h1 class="name">${testSuite.name}</h1>
                                     <hr />
                                     <div class="table-responsive">
-                                        <h3 class="sectionName">Created On: ${month[testSuite.createdAt.getMonth()]} ${testSuite.createdAt.getDate()}, ${testSuite.createdAt.getFullYear()}</h3>
+                                        <h3 class="sectionName">Created On: ${month[testSuite.createdAt.getMonth()]
+            } ${testSuite.createdAt.getDate()}, ${testSuite.createdAt.getFullYear()}</h3>
                                         <h3 class="sectionName">Status: <span class=${statusClassName}>${statusTestRun}</span></h3>
                                         <table class="table table table-bordered table-striped table-sm">
                                             <thead>
@@ -494,14 +538,18 @@ export class PdfService {
 
         const buffer = await this.generatePdf(pdfName, content);
         let key;
-        const file = UtilsService.createUploadableFile(pdfName, pdfCommonConfig, buffer)
+        const file = UtilsService.createUploadableFile(
+            pdfName,
+            pdfCommonConfig,
+            buffer,
+        );
         key = await this.awsS3Service.uploadPdf(file);
         unlink(`${pdfName}.html`, () => { });
         return key;
     }
 
     /**
-     * Internal method to generate invoice pdf and 
+     * Internal method to generate invoice pdf and
      * pass it to aws s3 service to store
      */
     // async generatePaidInvoicePdf(
@@ -526,7 +574,7 @@ export class PdfService {
     //     });
     //     const pageHeight = Math.floor(pdf.page.height);
     //     const pageWidth = Math.floor(pdf.page.width);
-    //     const textHeight = Math.floor(pageHeight / pdfPaymentSuccessInvoiceConfig.textHeight); 
+    //     const textHeight = Math.floor(pageHeight / pdfPaymentSuccessInvoiceConfig.textHeight);
     //     const borderHeight = pageHeight - margins.top - margins.bottom;
     //     const borderWidth = pageWidth - margins.left - margins.right;
     //     const titleHeight = margins.top + pdfPaymentSuccessInvoiceConfig.titleHeight;
@@ -572,8 +620,8 @@ export class PdfService {
     //     const policyLine5Start = margins.left + pdfPaymentSuccessInvoiceConfig.policyLine5Start;
     //     const policyLine6Start = margins.left + pdfPaymentSuccessInvoiceConfig.policyLine6Start;
     //     const { city, address1, address2, state, postalCode, country } = currentLoggedInUser;
-    //     const addressCheck1 = address1 && address2 && city && state && postalCode && country; 
-    //     const addressCheck2 = address1 && city && state && postalCode && country; 
+    //     const addressCheck1 = address1 && address2 && city && state && postalCode && country;
+    //     const addressCheck2 = address1 && city && state && postalCode && country;
     //     const month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
     //     pdf.pipe(writableStream);
@@ -583,7 +631,7 @@ export class PdfService {
     //     pdf.font('Times-Roman')
     //         .fontSize(pdfPaymentSuccessInvoiceConfig.fontSize1)
     //         .fillColor(`#${pdfPaymentSuccessInvoiceConfig.fillColor2}`)
-    //         .text("TestBox", titleLeftMargin, titleStart);  
+    //         .text("TestBox", titleLeftMargin, titleStart);
 
     //     pdf.lineWidth(lineWidth)
     //         .moveTo(margins.left, titleHeight)
@@ -598,7 +646,7 @@ export class PdfService {
     //         .fillColor(`#${pdfPaymentSuccessInvoiceConfig.fillColor1}`)
     //         .text(`Invoice ID: `, titleLeftMargin, invoiceStart + 20)
     //         .fillColor(`#${pdfPaymentSuccessInvoiceConfig.fillColor3}`)
-    //         .text(` ${invoice.id}`, titleLeftMargin + 50, invoiceStart + 20);  
+    //         .text(` ${invoice.id}`, titleLeftMargin + 50, invoiceStart + 20);
 
     //     pdf.lineWidth(lineWidth)
     //         .moveTo(margins.left, invoiceHeight)
@@ -660,7 +708,7 @@ export class PdfService {
     //                 ellipsis: true
     //             });
     //         y += 50;
-    //     }   
+    //     }
     //     pdf.font('Times-Roman')
     //         .fontSize(pdfPaymentSuccessInvoiceConfig.fontSize3)
     //         .fillColor(`#${pdfPaymentSuccessInvoiceConfig.fillColor1}`)
@@ -801,7 +849,7 @@ export class PdfService {
     //     let key;
     //     const readableStream = createReadStream(pdfName);
     //     const file = UtilsService.createUploadableFile(pdfName, pdfCommonConfig, readableStream)
-    //     key = await this.awsS3Service.uploadPdf(file); 
+    //     key = await this.awsS3Service.uploadPdf(file);
     //     unlink(pdfName, () => {});
     //     return key;
     // }

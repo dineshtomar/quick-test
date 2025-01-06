@@ -5,25 +5,23 @@ import { AbstractEntity } from "../../common/abstract.entity";
 import { ContactFormDto } from "./dto/contactFormDto";
 
 @Entity({
-    name: "contact_forms" 
+  name: "contact_forms",
 })
-export class ContactFormEntity  extends AbstractEntity<ContactFormDto> {
-    @Column()
-    firstName: string;
+export class ContactFormEntity extends AbstractEntity<ContactFormDto> {
+  @Column()
+  firstName: string;
 
-    @Column({ default: null })
-    lastName: string;
+  @Column({ default: null })
+  lastName: string;
 
-    @Column()
-    email: string;
+  @Column()
+  email: string;
 
-    @Column()
-    message: string;
+  @Column()
+  message: string;
 
-    @Column({ default: null })
-    phone: string;
+  @Column({ default: null })
+  phone: string;
 
-    dtoClass = ContactFormDto;
+  dtoClass = ContactFormDto;
 }
-
-

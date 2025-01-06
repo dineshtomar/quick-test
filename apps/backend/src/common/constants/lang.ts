@@ -1,1 +1,1 @@
- export const ALLOWED_LANGUAGES = ['en', 'es', 'ar'];
+export const ALLOWED_LANGUAGES = ["en", "es", "ar"];

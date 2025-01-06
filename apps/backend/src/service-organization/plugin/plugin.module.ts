@@ -7,12 +7,12 @@ import { OrganizationModule } from "../organization/organization.module";
 import { PluginConfigEntity } from "./pluginConfig.entity";
 
 @Module({
-    imports: [
-        forwardRef(() => OrganizationModule),
-        TypeOrmModule.forFeature([PluginConfigEntity]),
-    ],
-    controllers: [PluginsController],
-    exports: [PluginService],
-    providers: [PluginService],
+  imports: [
+    forwardRef(() => OrganizationModule),
+    TypeOrmModule.forFeature([PluginConfigEntity]),
+  ],
+  controllers: [PluginsController],
+  exports: [PluginService],
+  providers: [PluginService],
 })
 export class PluginModule {}

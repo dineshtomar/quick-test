@@ -8,36 +8,31 @@ import { TestSuiteReportDto } from "../test-report/dto/TestSuiteReportDto";
 import { UserEntity } from "../../../service-users/user/user.entity";
 
 export class TestSuiteListDto extends AbstractDto {
+  @ApiProperty({ type: String })
+  name: string;
 
-    @ApiProperty({ type: String })
-    name: string;
+  @ApiProperty({ type: String })
+  description: string;
 
-    @ApiProperty({ type: String })
-    description: string;
+  @ApiProperty({ type: String })
+  status: TestSuiteStatus;
 
-    @ApiProperty({ type: String })
-    status: TestSuiteStatus;
+  assignedTo: UserEntity;
 
-    assignedTo: UserEntity;
+  user: UserEntity;
 
-    user: UserEntity;
+  @ApiProperty()
+  testreport: TestSuiteReportDto;
 
-    @ApiProperty()
-    testreport: TestSuiteReportDto
-
-    constructor(testSuite: TestSuiteEntity) {
-        super(testSuite);
-        this.name = testSuite.name;
-        this.description = testSuite.description;
-        this.status = testSuite.status;
-        this.testreport = testSuite.testreport
-            ? testSuite.testreport.toDto()
-            : null;
-        this.assignedTo = testSuite.assignedTo?
-            testSuite.assignedTo
-            : null;
-        this.user = testSuite.user?
-            testSuite.user
-            : null;
-    }
+  constructor(testSuite: TestSuiteEntity) {
+    super(testSuite);
+    this.name = testSuite.name;
+    this.description = testSuite.description;
+    this.status = testSuite.status;
+    this.testreport = testSuite.testreport
+      ? testSuite.testreport.toDto()
+      : null;
+    this.assignedTo = testSuite.assignedTo ? testSuite.assignedTo : null;
+    this.user = testSuite.user ? testSuite.user : null;
+  }
 }

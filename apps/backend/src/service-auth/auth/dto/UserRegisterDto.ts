@@ -69,7 +69,7 @@ export class UserRegisterDto {
 
   @IsEmail()
   @IsNotEmpty({ message: "Email cannot be empty" })
-  @ApiProperty({ example : 'abc@xyz.pqr' })
+  @ApiProperty({ example: "abc@xyz.pqr" })
   email: string;
 
   @MaxLength(200, { message: "Title max size can be 200" })
@@ -78,30 +78,30 @@ export class UserRegisterDto {
   @ApiProperty()
   title: string;
 
-  @IsStrongPassword({}, { message : 'password must be a strong password' })
+  @IsStrongPassword({}, { message: "password must be a strong password" })
   @IsNotEmpty({ message: "Password cannot be empty" })
-  @ApiProperty({ minLength: 8, example : 'Qwerty123@' })
+  @ApiProperty({ minLength: 8, example: "Qwerty123@" })
   readonly password: string;
 
-  @IsNumberString({}, { message : 'phone must be a number' })
+  @IsNumberString({}, { message: "phone must be a number" })
   @MinLength(7)
   @MaxLength(13)
   @IsOptional()
   @ApiProperty({
-    example : '0987654321'
+    example: "0987654321",
   })
   phone: string;
 }
 
-export class useregisterSwagger { 
+export class useregisterSwagger {
   @ApiProperty()
-  user : UserRegisterDto;
+  user: UserRegisterDto;
 
   @ApiProperty()
-  organization : string
+  organization: string;
 }
 
 export class adminRegisterSwagger {
   @ApiProperty()
-  user : UserRegisterDto
+  user: UserRegisterDto;
 }

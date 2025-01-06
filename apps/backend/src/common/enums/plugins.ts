@@ -1,3 +1,3 @@
 export enum Plugins {
-   JIRA = "JIRA"
+  JIRA = "JIRA",
 }

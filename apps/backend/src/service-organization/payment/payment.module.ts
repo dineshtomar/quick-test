@@ -11,19 +11,29 @@ import { SubscriptionStatusService } from "./subscriptionStatus.service";
 import { SubscriptionStatusRepository } from "./repositories/subscriptionStatus.repository";
 import { SubscriptionRepository } from "./repositories/subscription.repository";
 import { CronService } from "./cron.service";
-        
+
 @Module({
-    imports: [
-        forwardRef(() => UserModule),
-        forwardRef(() => AuthModule),
-        forwardRef(() => OrganizationModule),
-        TypeOrmModule.forFeature([
-            SubscriptionRepository,
-            SubscriptionStatusRepository
-        ])
-    ],
-    controllers: [PaymentController],
-    providers: [PaymentService, SubscriptionService, SubscriptionStatusService, CronService],
-    exports: [PaymentService, SubscriptionService, SubscriptionStatusService, CronService]
+  imports: [
+    forwardRef(() => UserModule),
+    forwardRef(() => AuthModule),
+    forwardRef(() => OrganizationModule),
+    TypeOrmModule.forFeature([
+      SubscriptionRepository,
+      SubscriptionStatusRepository,
+    ]),
+  ],
+  controllers: [PaymentController],
+  providers: [
+    PaymentService,
+    SubscriptionService,
+    SubscriptionStatusService,
+    CronService,
+  ],
+  exports: [
+    PaymentService,
+    SubscriptionService,
+    SubscriptionStatusService,
+    CronService,
+  ],
 })
 export class PaymentModule {}

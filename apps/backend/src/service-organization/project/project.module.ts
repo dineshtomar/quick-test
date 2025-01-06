@@ -19,23 +19,41 @@ import { ProjectController } from "./controllers/project.controller";
 import { ProjectEntity } from "./project.entity";
 import { ActivityEntity } from "./activity/activity.entity";
 import { ProjecMemberEntity } from "./members/projectMember.entity";
-        
+
 @Module({
-    imports: [
-        forwardRef(() => AuthModule),
-        forwardRef(() => UserModule),
-        forwardRef(() => TestCaseModule),
-        forwardRef(() => TestSuitesModule),
-        forwardRef(() => MilestoneModule),
-        TypeOrmModule.forFeature([
-            ProjectEntity, 
-            ActivityEntity,
-            ProjecMemberEntity
-        ]),
-    ],
-    controllers: [ProjectController, TestcaseRelatedProjectController, ActivityRelatedProjectController,
-        TestsuiteRelatedProjectController, SectionRelatedProjectController, MilestoneRelatedProjectController],
-    exports: [ProjectCreateService, ProjectDeleteService, ProjectReadService, ProjectUpdateService, ActivityService],
-    providers: [ProjectCreateService, ProjectDeleteService, ProjectReadService, ProjectUpdateService, ActivityService],
+  imports: [
+    forwardRef(() => AuthModule),
+    forwardRef(() => UserModule),
+    forwardRef(() => TestCaseModule),
+    forwardRef(() => TestSuitesModule),
+    forwardRef(() => MilestoneModule),
+    TypeOrmModule.forFeature([
+      ProjectEntity,
+      ActivityEntity,
+      ProjecMemberEntity,
+    ]),
+  ],
+  controllers: [
+    ProjectController,
+    TestcaseRelatedProjectController,
+    ActivityRelatedProjectController,
+    TestsuiteRelatedProjectController,
+    SectionRelatedProjectController,
+    MilestoneRelatedProjectController,
+  ],
+  exports: [
+    ProjectCreateService,
+    ProjectDeleteService,
+    ProjectReadService,
+    ProjectUpdateService,
+    ActivityService,
+  ],
+  providers: [
+    ProjectCreateService,
+    ProjectDeleteService,
+    ProjectReadService,
+    ProjectUpdateService,
+    ActivityService,
+  ],
 })
 export class ProjectModule {}

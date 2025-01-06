@@ -1,7 +1,6 @@
 import { forwardRef, Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 
-
 import { AuthModule } from "../../service-auth/auth/auth.module";
 import { UserController } from "./user.controller";
 import { UserReadService } from "./services/read.service";
@@ -25,23 +24,34 @@ import { TestCaseModule } from "./../../service-organization/test-case/test-case
 import { TestSuitesModule } from "./../../service-organization/test-suite/test-suite.module";
 
 @Module({
-    imports: [
-        forwardRef(() => AuthModule),
-        forwardRef(() => OrganizationModule),
-        forwardRef(() => ProjectModule),
-        forwardRef(() => PaymentModule),
-        forwardRef(() => RoleModule),
-        forwardRef(() => TestCaseModule),
-        forwardRef(() => TestSuitesModule),
-        TypeOrmModule.forFeature([
-            UserEntity, 
-            ForgottenPasswordEntity,
-            EmailVerifyTokenEntity,
-            ProjecMemberEntity
-        ]),
-    ],
-    controllers: [UserController],
-    exports: [UserReadService, UserCreateService, UserDeleteService, UserUpdateService],
-    providers: [UserReadService, UserCreateService, UserDeleteService, UserUpdateService, UserSubscriber],
+  imports: [
+    forwardRef(() => AuthModule),
+    forwardRef(() => OrganizationModule),
+    forwardRef(() => ProjectModule),
+    forwardRef(() => PaymentModule),
+    forwardRef(() => RoleModule),
+    forwardRef(() => TestCaseModule),
+    forwardRef(() => TestSuitesModule),
+    TypeOrmModule.forFeature([
+      UserEntity,
+      ForgottenPasswordEntity,
+      EmailVerifyTokenEntity,
+      ProjecMemberEntity,
+    ]),
+  ],
+  controllers: [UserController],
+  exports: [
+    UserReadService,
+    UserCreateService,
+    UserDeleteService,
+    UserUpdateService,
+  ],
+  providers: [
+    UserReadService,
+    UserCreateService,
+    UserDeleteService,
+    UserUpdateService,
+    UserSubscriber,
+  ],
 })
 export class UserModule {}

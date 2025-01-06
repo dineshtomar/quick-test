@@ -13,14 +13,14 @@ import { SectionEntity } from "./section/section.entity";
 import { TestCaseEntity } from "./test-case.entity";
 
 @Module({
-    imports: [
-        forwardRef(() => AuthModule),
-        forwardRef(() => ProjectModule),
-        forwardRef(() => TestSuitesModule),
-        TypeOrmModule.forFeature([TestCaseEntity, SectionEntity]),
-    ],
-    controllers: [TestCaseController],
-    exports: [TestCaseService, SectionService],
-    providers: [TestCaseService, SectionService],
+  imports: [
+    forwardRef(() => AuthModule),
+    forwardRef(() => ProjectModule),
+    forwardRef(() => TestSuitesModule),
+    TypeOrmModule.forFeature([TestCaseEntity, SectionEntity]),
+  ],
+  controllers: [TestCaseController],
+  exports: [TestCaseService, SectionService],
+  providers: [TestCaseService, SectionService],
 })
 export class TestCaseModule {}

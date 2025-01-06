@@ -7,13 +7,13 @@ import { MilestoneService } from "./milestone.service";
 import { MilestoneEntity } from "./milestone.entity";
 
 @Module({
-    imports: [
-        forwardRef(() => AuthModule),
-        forwardRef(() => ProjectModule),
-        TypeOrmModule.forFeature([MilestoneEntity]),
-    ],
-    controllers: [MilestoneController],
-    exports: [MilestoneService],
-    providers: [MilestoneService],
+  imports: [
+    forwardRef(() => AuthModule),
+    forwardRef(() => ProjectModule),
+    TypeOrmModule.forFeature([MilestoneEntity]),
+  ],
+  controllers: [MilestoneController],
+  exports: [MilestoneService],
+  providers: [MilestoneService],
 })
 export class MilestoneModule {}

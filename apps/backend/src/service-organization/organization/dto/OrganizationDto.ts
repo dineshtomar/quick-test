@@ -5,21 +5,21 @@ import { OrganizationEntity } from "../organization.entity";
 import { ProjectDto } from "../../project/dto/ProjectDto";
 
 export class OrganizationDto extends AbstractDto {
-    @ApiProperty()
-    name: string;
+  @ApiProperty()
+  name: string;
 
-    @ApiProperty()
-    projects: ProjectDto[];
+  @ApiProperty()
+  projects: ProjectDto[];
 
-    @ApiProperty()
-    subscriptionStatus: any;
+  @ApiProperty()
+  subscriptionStatus: any;
 
-    constructor(organization: OrganizationEntity) {
-        super(organization);
-        this.name = organization.name;
-        this.subscriptionStatus = organization.subscriptionStatus;
-        this.projects = organization.projects?
-            organization.projects.toDtos()
-            :null;
-    }
+  constructor(organization: OrganizationEntity) {
+    super(organization);
+    this.name = organization.name;
+    this.subscriptionStatus = organization.subscriptionStatus;
+    this.projects = organization.projects
+      ? organization.projects.toDtos()
+      : null;
+  }
 }

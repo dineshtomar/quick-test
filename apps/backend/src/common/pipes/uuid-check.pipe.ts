@@ -3,12 +3,12 @@ import { isUUID } from "class-validator";
 
 @Injectable()
 export class UUIDCheckPipe {
-    transform(uuid) {
-        if (isUUID(uuid, "4")) {
-            return uuid;
-        }
-        throw new BadRequestException(
-            "This action can not be completed, Try again."
-        );
+  transform(uuid) {
+    if (isUUID(uuid, "4")) {
+      return uuid;
     }
+    throw new BadRequestException(
+      "This action can not be completed, Try again.",
+    );
+  }
 }
