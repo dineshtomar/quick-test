@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "nx run-many -t dev",
     "build": "nx run-many -t build",
-    "release":"nx run-many -t release start:prod"
+    "release": "nx run-many -t release start:prod",
+    "backend:prod": "nx start:prod quick-test-backend",
+    "frontend:prod": "nx run release quick-test-frontend"
   },
   "private": true,
   "dependencies": {
