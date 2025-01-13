@@ -1,90 +1,87 @@
 # QuickTest
 
-<a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
+This project is an [NX](https://nx.dev/) monorepo that includes a React.js application (frontend) and a NestJS application (backend). The database used is Postgres, and TypeORM is utilized as the ORM (Object-Relational Mapping) tool.
 
-✨ Your new, shiny [Nx workspace](https://nx.dev) is almost ready ✨.
+React.js App: Located in apps/frontend
+NestJS App: Located in apps/backend
 
-[Learn more about this workspace setup and its capabilities](https://nx.dev/nx-api/js?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects) or run `npx nx graph` to visually explore what was created. Now, let's get you up to speed!
+Docker has been configured to streamline the development and deployment processes.
 
-## Finish your remote caching setup
+## Prerequisites
 
-[Click here to finish setting up your workspace!](https://cloud.nx.app/connect/HrLDRtTowU)
+Ensure the following tools are installed on your system:
 
+Node.js (v22.12.0)
+Docker
+Docker Compose (v2.30.3-desktop.1 or later)
+NX CLI (optional for local development):
 
-## Generate a library
+## Setup
 
-```sh
-npx nx g @nx/js:lib packages/pkg1 --publishable --importPath=@my-org/pkg1
+Install all the dependencies needed for the project.
+
+```bash
+npm install
 ```
 
-## Run tasks
+For the database either, you can setup everything in your system or you can use docker.
 
-To build the library use:
+1. Sytem setup: [Install Postgresql](https://www.postgresql.org/download/)
 
-```sh
-npx nx build pkg1
+After successful seeding, you can set the env variable for the apps:
+
+```bash
+cp apps/backend/.env.example apps/backend/.env.dev
+cp apps/frontend/.env.example apps/frontend/.env
 ```
 
-To run any task with Nx use:
+update this variables to desired values.
 
-```sh
-npx nx <target> <project-name>
+Now, you can run the backend and frontend or you can use the nx to run multiple apps at once.
+
+Start Backend
+
+```bash
+npx nx run quick-test-backend:dev
 ```
 
-These targets are either [inferred automatically](https://nx.dev/concepts/inferred-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or defined in the `project.json` or `package.json` files.
+Start Frontend
 
-[More about running tasks in the docs &raquo;](https://nx.dev/features/run-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Versioning and releasing
-
-To version and release the library use
-
-```
-npx nx release
+```bash
+npx nx run quick-test-frontend:dev
 ```
 
-Pass `--dry-run` to see what would happen without actually releasing the library.
+Or, run both the app at once:
 
-[Learn more about Nx release &raquo;](hhttps://nx.dev/features/manage-releases?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Keep TypeScript project references up to date
-
-Nx automatically updates TypeScript [project references](https://www.typescriptlang.org/docs/handbook/project-references.html) in `tsconfig.json` files to ensure they remain accurate based on your project dependencies (`import` or `require` statements). This sync is automatically done when running tasks such as `build` or `typecheck`, which require updated references to function correctly.
-
-To manually trigger the process to sync the project graph dependencies information to the TypeScript project references, run the following command:
-
-```sh
-npx nx sync
+```bash
+npx nx run-many --target=dev
 ```
 
-You can enforce that the TypeScript project references are always in the correct state when running in CI by adding a step to your CI job configuration that runs the following command:
+Or, you can use the predefined script in _package.json_. It will run both the apps.
 
-```sh
-npx nx sync:check
+```bash
+npm run dev
+
+## Hosting
+
+Note: Before going for hosting, check if the backend app has _.env.production_ and frontend app has _.env_ files.
+
+For hosting, quick-test is using Docker
+
+# Docker Setup:
+   1. [Install docker](https://www.docker.com/)
+   2. Create docker image of the database: (Here -d will create and start the containers in the background, allowing you to continue using your terminal for other tasks.)
+
+### Using Docker
+
+Building image for both the apps:
+
+```bash
+docker compose build
 ```
 
-[Learn more about nx sync](https://nx.dev/reference/nx-commands#sync)
+Run the apps:
 
-
-[Learn more about Nx on CI](https://nx.dev/ci/intro/ci-with-nx#ready-get-started-with-your-provider?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Install Nx Console
-
-Nx Console is an editor extension that enriches your developer experience. It lets you run tasks, generate code, and improves code autocompletion in your IDE. It is available for VSCode and IntelliJ.
-
-[Install Nx Console &raquo;](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Useful links
-
-Learn more:
-
-- [Learn more about this workspace setup](https://nx.dev/nx-api/js?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects)
-- [Learn about Nx on CI](https://nx.dev/ci/intro/ci-with-nx?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Releasing Packages with Nx release](https://nx.dev/features/manage-releases?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [What are Nx plugins?](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-And join the Nx community:
-- [Discord](https://go.nx.dev/community)
-- [Follow us on X](https://twitter.com/nxdevtools) or [LinkedIn](https://www.linkedin.com/company/nrwl)
-- [Our Youtube channel](https://www.youtube.com/@nxdevtools)
-- [Our blog](https://nx.dev/blog?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+```bash
+docker compose up -d
+```
