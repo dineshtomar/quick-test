@@ -7,18 +7,11 @@ import { Subjects } from "../../common/constants/subject";
 import { FreeTrial } from "../../common/enums/days-enum";
 import { ConfigService } from "@nestjs/config";
 import { AllConfigType } from "../../config/config.type";
-import { writeFileSync, existsSync, mkdirSync, readdirSync, unlinkSync } from 'fs';
+import { writeFileSync, readFileSync, existsSync, mkdirSync, readdirSync, unlinkSync } from 'fs';
 import { UtilsService } from "src/_helpers/utils.service";
-import { resetPasswordTemplate } from "src/email-templates/local/reset-password";
 import { join } from 'path';
-import { welcomeEmail } from "src/email-templates/local/welcomeEmail";
-import { contactFormAcknowldge } from "src/email-templates/local/contactFormAcknowldge";
-import { verifyEmail } from "src/email-templates/local/verifyEmail";
-import { freeTrialStart } from "src/email-templates/local/freeTrialStart";
-import { freeTrialExpiring } from "src/email-templates/local/freeTrialExpiring";
-import { freeTrialExpired } from "src/email-templates/local/freeTrialExpired";
-
-//dotenv.config();
+import * as Handlebars from 'handlebars';
+const path = require('path');
 
 @Injectable()
 export class EmailService {
@@ -100,10 +93,9 @@ export class EmailService {
     subject: string,
     template: string,
     context: Record<string, unknown>,
-    lang?: string
   ): Promise<boolean> {
     if (!email || !template) return false;
-    if (process.env.NODE_ENV === 'development') this.saveAndOpenEmail(subject, context, lang);
+    if (process.env.NODE_ENV === 'development') this.saveAndOpenEmail(subject, context, template);
     else this.sendEmail(email, [], [], subject, template, context);
     return true;
   }
@@ -113,47 +105,18 @@ export class EmailService {
    * @param subject
    * @param context
    */
-  private saveAndOpenEmail(subject: string, context: Record<string, any>, userLanguage: string) {
+  private async saveAndOpenEmail(subject: string, context: Record<string, any>, template: string) {
     try {
-      const emailContent = this.getEmailContentForLocal(subject, context, userLanguage);
       const dirPath = './local-emails';
       const filePath = `${dirPath}/${subject.replace(/\s/g, "")}.html`;
-      // Clear the folder before creating the file
+      const templateText = readFileSync(path.resolve(path.resolve(__dirname, '../../'), template), 'utf8');
+      const compiledTemplate = Handlebars.compile(templateText);
+      const renderedHtml = compiledTemplate(context);
       this.clearFolder(dirPath);
-      // Write the new file
-      writeFileSync(filePath, emailContent);
-      // Open the file in the default browser
+      writeFileSync(filePath, renderedHtml);
       UtilsService.openInBrowser(filePath);
     } catch (error) {
       console.error('Error saving or opening email locally:', error.message);
-    }
-  }
-  private getEmailContentForLocal = (subject: string, context: Record<string, any>, userLanguage: string) => {
-    let emailContent: string = '';
-    switch (subject) {
-      case Subjects[userLanguage].WELCOME_MAIL:
-        emailContent = welcomeEmail(context.name, context.link);
-        return emailContent;
-      case Subjects[userLanguage].RESET_PASSWORD:
-        emailContent = resetPasswordTemplate(context.name, context.link);
-        return emailContent;
-      case Subjects[userLanguage].ACKNOWLEDGE_MAIL:
-        emailContent = contactFormAcknowldge(context.name);
-        return emailContent;
-      case Subjects[userLanguage].VERIFY_EMAIL:
-        emailContent = verifyEmail(context.name, context.link);
-        return emailContent;
-      case Subjects[userLanguage].FREETRIAL_START:
-        emailContent = freeTrialStart(context.name, context.freeTrialDays, context.amount, context.interval);
-        return emailContent;
-      case Subjects[userLanguage].FREETRIAL_ENDING:
-        emailContent = freeTrialExpiring(context.name);
-        return emailContent;
-      case Subjects[userLanguage].FREETRIAL_ENDED:
-        emailContent = freeTrialExpired(context.name);
-        return emailContent;
-      default:
-        break;
     }
   }
 
@@ -189,7 +152,7 @@ export class EmailService {
       organizationName: user.organization?.name,
       verifyLink,
     };
-    const res = await this.callSendEmail(email, subject, template, context, userLanguage);
+    const res = await this.callSendEmail(email, subject, template, context);
     return res;
   }
 
@@ -217,7 +180,7 @@ export class EmailService {
       link: passwordResetLink,
       owner: requestedBy?.firstName,
     };
-    const res = await this.callSendEmail(email, subject, template, context, userLanguage);
+    const res = await this.callSendEmail(email, subject, template, context);
     return res;
   }
 
@@ -240,7 +203,7 @@ export class EmailService {
     const context = {
       name,
     };
-    const res = await this.callSendEmail(email, subject, template, context, userLanguage);
+    const res = await this.callSendEmail(email, subject, template, context);
 
     return res;
   }
@@ -266,7 +229,7 @@ export class EmailService {
       name: user?.firstName,
       link: resetLink,
     };
-    const res = await this.callSendEmail(email, subject, template, context, userLanguage);
+    const res = await this.callSendEmail(email, subject, template, context);
     return res;
   }
 
@@ -290,7 +253,7 @@ export class EmailService {
       name: user?.firstName,
       verifyLink,
     };
-    const res = await this.callSendEmail(email, subject, template, context, userLanguage);
+    const res = await this.callSendEmail(email, subject, template, context);
     return res;
   }
 
@@ -317,7 +280,7 @@ export class EmailService {
       amount: unit_amount / 100,
       interval,
     };
-    const res = await this.callSendEmail(email, subject, template, context, userLanguage);
+    const res = await this.callSendEmail(email, subject, template, context);
 
     return res;
   }
@@ -338,7 +301,7 @@ export class EmailService {
     const context = {
       name: user?.firstName,
     };
-    const res = await this.callSendEmail(email, subject, template, context, userLanguage);
+    const res = await this.callSendEmail(email, subject, template, context);
     return res;
   }
 
@@ -358,7 +321,7 @@ export class EmailService {
     const context = {
       name: user?.firstName,
     };
-    const res = await this.callSendEmail(email, subject, template, context, userLanguage);
+    const res = await this.callSendEmail(email, subject, template, context,);
 
     return res;
   }
