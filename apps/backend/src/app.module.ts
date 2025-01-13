@@ -14,7 +14,7 @@ import { MailerModule } from "@nestjs-modules/mailer";
 import { HandlebarsAdapter } from "@nestjs-modules/mailer/dist/adapters/handlebars.adapter";
 import { ScheduleModule } from "@nestjs/schedule";
 import { APP_FILTER, APP_INTERCEPTOR } from "@nestjs/core/constants";
-import { PuppeteerModule } from "nest-puppeteer";
+
 import {
   contextMiddleware,
   RawBodyMiddleware,
