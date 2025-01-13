@@ -1,5 +1,6 @@
 /dist
 /node_modules
+/local-emails
 .env
 .env.development
 .eslintrc.js
