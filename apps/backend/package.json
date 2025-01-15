@@ -13,7 +13,7 @@
         "start:hmr": "node dist/main",
         "dev": "nest start -b swc --watch",
         "start:dev": "nest start -b swc --watch",
-        "start:prod": "node dist/src/main.js",
+        "start:prod": "node ../../dist/apps/backend/main.js",
         "start:run": "ts-node src/main.ts",
         "typeorm": "env-cmd ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
         "migration:create": "bun typeorm -- migration:create",
