@@ -2,6 +2,7 @@ import * as bcrypt from "bcrypt";
 import * as _ from "lodash";
 import { InternalServerErrorException } from "@nestjs/common";
 import { ErrorMessages } from "../common/enums/error-messages";
+import { exec } from 'child_process';
 
 export class UtilsService {
   /**
@@ -178,4 +179,30 @@ export class UtilsService {
       encoding: pdfCommonConfig.encodingType,
     };
   }
+
+  public static openInBrowser(filePath: string) {
+    const normalizedPath = filePath.replace(/\\/g, '/'); // Normalize for different OS
+    const platform = process.platform;
+    let command: string;
+    if (platform === 'win32') {
+      // Windows
+      command = `start ${normalizedPath}`;
+    } else if (platform === 'darwin') {
+      // macOS
+      command = `open ${normalizedPath}`;
+    } else {
+      // Linux
+      command = `xdg-open ${normalizedPath}`;
+    }
+    exec(command, (error) => {
+      if (error) {
+        console.error('Error opening file in browser:', error.message);
+      } else {
+        console.log('Email opened in browser:', normalizedPath);
+      }
+    });
+  }
+
 }
+
+

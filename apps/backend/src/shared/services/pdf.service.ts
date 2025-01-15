@@ -1,7 +1,5 @@
 import { unlink, writeFileSync, readFileSync } from "fs";
 import { Injectable } from "@nestjs/common";
-// import type { BrowserContext } from "puppeteer";
-// import { InjectContext } from "nest-puppeteer";
 import { AwsS3Service } from "./aws-s3.service";
 import { AppConfigService } from "./app.config.service";
 import { ProjectEntity } from "../../service-organization/project/project.entity";

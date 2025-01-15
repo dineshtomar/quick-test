@@ -7,15 +7,18 @@ import { Subjects } from "../../common/constants/subject";
 import { FreeTrial } from "../../common/enums/days-enum";
 import { ConfigService } from "@nestjs/config";
 import { AllConfigType } from "../../config/config.type";
-
-//dotenv.config();
+import { writeFileSync, readFileSync, existsSync, mkdirSync, readdirSync, unlinkSync } from 'fs';
+import { UtilsService } from "src/_helpers/utils.service";
+import { join } from 'path';
+import * as Handlebars from 'handlebars';
+const path = require('path');
 
 @Injectable()
 export class EmailService {
   constructor(
     private readonly mailerService: MailerService,
     private readonly configService: ConfigService<AllConfigType>,
-  ) {}
+  ) { }
 
   // context is variable's which we are going to use in mail template
   sendEmail(
@@ -38,8 +41,8 @@ export class EmailService {
         cc,
         bcc,
       })
-      .then(() => {})
-      .catch(() => {});
+      .then(() => { })
+      .catch(() => { });
     return true;
   }
 
@@ -69,8 +72,8 @@ export class EmailService {
     }
     this.mailerService
       .sendMail(mailOptions)
-      .then(() => {})
-      .catch(() => {});
+      .then(() => { })
+      .catch(() => { });
     return true;
   }
 
@@ -92,8 +95,40 @@ export class EmailService {
     context: Record<string, unknown>,
   ): Promise<boolean> {
     if (!email || !template) return false;
-    this.sendEmail(email, [], [], subject, template, context);
+    if (process.env.NODE_ENV === 'development') this.saveAndOpenEmail(subject, context, template);
+    else this.sendEmail(email, [], [], subject, template, context);
     return true;
+  }
+
+  /**
+   * Internal method to save and open email locally
+   * @param subject
+   * @param context
+   */
+  private async saveAndOpenEmail(subject: string, context: Record<string, any>, template: string) {
+    try {
+      const dirPath = './local-emails';
+      const filePath = `${dirPath}/${subject.replace(/\s/g, "")}.html`;
+      const templateText = readFileSync(path.resolve(path.resolve(__dirname, '../../'), template), 'utf8');
+      const compiledTemplate = Handlebars.compile(templateText);
+      const renderedHtml = compiledTemplate(context);
+      this.clearFolder(dirPath);
+      writeFileSync(filePath, renderedHtml);
+      UtilsService.openInBrowser(filePath);
+    } catch (error) {
+      console.error('Error saving or opening email locally:', error.message);
+    }
+  }
+
+  private clearFolder(dirPath: string) {
+    if (existsSync(dirPath)) {
+      const files = readdirSync(dirPath); // Get all files in the directory
+      for (const file of files) {
+        unlinkSync(join(dirPath, file)); // Delete each file
+      }
+    } else {
+      mkdirSync(dirPath, { recursive: true }); // Create the directory if it doesn't exist
+    }
   }
 
   /**
@@ -286,7 +321,7 @@ export class EmailService {
     const context = {
       name: user?.firstName,
     };
-    const res = await this.callSendEmail(email, subject, template, context);
+    const res = await this.callSendEmail(email, subject, template, context,);
 
     return res;
   }
