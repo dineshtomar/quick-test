@@ -75,7 +75,7 @@ import stripeConfig from "./config/stripe.config";
           infer: true,
         }),
         loaderOptions: {
-          path: path.join(process.cwd(), "dist", "i18n/"),
+          path: path.join(process.cwd(), "../../dist/apps/backend", "i18n/"),
           watch:
             configService.get("app.nodeEnv", { infer: true }) === "developmet",
         },
