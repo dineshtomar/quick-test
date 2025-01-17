@@ -6,7 +6,7 @@ import { Formik, Form } from "formik";
 import { appRoutes } from "../Utils/constants/page-routes";
 import axiosService from "../Utils/axios";
 import Button from "../Button";
-import { FormikCheckbox } from "../Common/FormikInput";
+import { FormikCheckbox, RenderFormikInputs } from "../Common/FormikInput";
 import { showError, showSuccess } from "../Toaster/ToasterFun";
 import {
   SubscriptionStatus,
@@ -18,7 +18,6 @@ import { AppContext } from "../Context/mainContext";
 import { useTranslation } from "react-i18next";
 import bugplotLogo from "../../assets/images/bugplot-logo.svg";
 import { ILoginResponse, ISignInInputFieldProps, SignInInitialValues } from "../Utils/interfaces/userObject";
-import { RenderFormikInputs } from "./RenderFormikInput";
 
 const SignIn = () => {
   const { i18n, t } = useTranslation(["common"]);

@@ -6,7 +6,7 @@ import * as Yup from "yup";
 import { appRoutes } from "../Utils/constants/page-routes";
 import axiosService from "../Utils/axios";
 import Button from "../Button";
-import { FormikCheckbox } from "../Common/FormikInput";
+import { FormikCheckbox, RenderFormikInputs } from "../Common/FormikInput";
 import {
   validateRequiredEmail,
   validateRequiredFirstName,
@@ -20,7 +20,6 @@ import { useFormSubmitWithLoading } from "../Utils/hooks/useFormSubmitWithLoadin
 import { useTranslation } from "react-i18next";
 import bugplotLogo from "../../assets/images/bugplot-logo.svg";
 import { initialSignUpValues, SignUpFormValues } from "../Utils/interfaces/userObject";
-import { RenderFormikInputs } from "./RenderFormikInput";
 
 const SignUp = () => {
   const { t } = useTranslation(["common"]);
