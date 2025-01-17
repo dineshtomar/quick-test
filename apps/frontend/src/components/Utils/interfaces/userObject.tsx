@@ -1,4 +1,3 @@
-
 // Base interface for user-related properties
 export interface UserBase {
     firstName: string;
@@ -30,4 +29,44 @@ export interface InputFieldProps {
     type: string;
     name: keyof SignUpFormValues; // Restrict to valid form field keys
     label: string;
+    validation?: boolean
+}
+
+export interface ISignInInputFieldProps {
+    email: string;
+    password: string;
+    remember_me: boolean;
+};
+
+export const SignInInitialValues: ISignInInputFieldProps = {
+    email: "",
+    password: "",
+    remember_me: false,
+};
+
+export interface ILoginResponse {
+    address1?: string
+    address2?: string
+    archivedByUser?: string
+    city?: string
+    country?: string
+    createdAt?: string
+    deletedAt?: string
+    email: string
+    firstName: string
+    freeTrialStartDate?: string
+    id: string
+    isVerified?: boolean
+    language: string
+    lastName: string
+    organization: string
+    phone?: string
+    postalCode?: string
+    profileImage?: string
+    role: { id: string, roleType: string, createdAt: string, updatedAt: string }
+    roleId: string
+    state?: string
+    subscriptionStatus?: string
+    title?: string
+    updatedAt?: string
 }

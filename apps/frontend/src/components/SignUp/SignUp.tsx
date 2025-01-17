@@ -6,7 +6,7 @@ import * as Yup from "yup";
 import { appRoutes } from "../Utils/constants/page-routes";
 import axiosService from "../Utils/axios";
 import Button from "../Button";
-import { FormikInput, FormikCheckbox } from "../Common/FormikInput";
+import { FormikCheckbox } from "../Common/FormikInput";
 import {
   validateRequiredEmail,
   validateRequiredFirstName,
@@ -19,7 +19,8 @@ import { ToastMessage } from "../Utils/constants/misc";
 import { useFormSubmitWithLoading } from "../Utils/hooks/useFormSubmitWithLoading";
 import { useTranslation } from "react-i18next";
 import bugplotLogo from "../../assets/images/bugplot-logo.svg";
-import { initialSignUpValues, SignUpFormValues, InputFieldProps } from "../Utils/interfaces/userObject";
+import { initialSignUpValues, SignUpFormValues } from "../Utils/interfaces/userObject";
+import { RenderFormikInputs } from "./RenderFormikInput";
 
 const SignUp = () => {
   const { t } = useTranslation(["common"]);
@@ -85,19 +86,6 @@ const SignUp = () => {
   const { onSubmitHandler, loading } = useFormSubmitWithLoading(submitForm);
   const [validation, setValidation] = useState(false);
 
-  function renderFormikInputs(fields: Array<InputFieldProps>) {
-    return fields.map((field) => (
-      <div key={field.name}>
-        <FormikInput
-          type={field.type}
-          name={field.name}
-          label={field.label}
-          validation={validation}
-        />
-      </div>
-    ));
-  }
-
   function getTermsAndPrivacyLabel() {
     return `${t("I agree to")} 
       <a href='${process.env.REACT_APP_WEBSITE_DOMAIN_LINK}/terms' class="hover:text-indigo-600" rel="noreferrer" target="_blank">
@@ -137,13 +125,13 @@ const SignUp = () => {
             >
               {() => (
                 <Form className="space-y-6" action="#" method="POST" noValidate>
-                  {renderFormikInputs([
-                    { type: "text", name: "firstName", label: t("First Name") },
-                    { type: "text", name: "lastName", label: t("Last Name") },
-                    { type: "email", name: "email", label: t("Work Email") },
-                    { type: "text", name: "org", label: t("Organization") },
-                    { type: "password", name: "password", label: t("Password") },
-                    { type: "password", name: "cnfpassword", label: t("Confirm Password") },
+                  {RenderFormikInputs([
+                    { type: "text", name: "firstName", label: t("First Name"), validation: false },
+                    { type: "text", name: "lastName", label: t("Last Name"), validation: false },
+                    { type: "email", name: "email", label: t("Work Email"), validation: false },
+                    { type: "text", name: "org", label: t("Organization"), validation: false },
+                    { type: "password", name: "password", label: t("Password"), validation: false },
+                    { type: "password", name: "cnfpassword", label: t("Confirm Password"), validation: false },
                   ])}
 
                   <FormikCheckbox
