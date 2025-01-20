@@ -20,6 +20,7 @@ const InputDateField: FC<Iprops> = ({ ...props }: Iprops) => {
   const { value, name, touched, error, disabled, validation, ...rest } = {
     ...props,
   };
+
   const formik = useFormikContext();
   const { setFieldValue } = formik;
 
