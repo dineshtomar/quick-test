@@ -20,7 +20,7 @@ import { appRoutes, projectRoutes } from "../Utils/constants/page-routes";
 import Tippy from "@tippyjs/react";
 import i18next from "i18next";
 import { useTranslation } from "react-i18next";
-import { useQuery, useQueryClient } from "react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getProjects } from "../../services/projectPageServices";
 import AccessControl from "../AccessControl";
 import ConfirmModal from "../Common/ConfirmModal";
@@ -96,7 +96,7 @@ export default function Projects() {
     }
   };
 
-  const { data, refetch, isLoading } = useQuery("all-projects", getProjects);
+  const { data, refetch, isLoading } = useQuery({ queryKey: ["all-projects"], queryFn: getProjects });
 
   const makeFavorite = async (id: string) => {
     const resp = await axiosService.post(`/projects/${id}/favorites`, {});
@@ -131,7 +131,7 @@ export default function Projects() {
       );
       showSuccess(resp.data.message);
       toggleModal(false);
-      queryClient.invalidateQueries("all-projects");
+      queryClient.invalidateQueries({ queryKey: ["all-projects"] });
     } catch (err) {
       // console.log(err.messsage)
     }
@@ -239,11 +239,10 @@ export default function Projects() {
                                     {project.favorite ? (
                                       <svg
                                         xmlns="http://www.w3.org/2000/svg"
-                                        className={`h-4 w-4 cursor-pointer hover:text-indigo-100 ${
-                                          project.favorite
-                                            ? "text-indigo-700"
-                                            : "text-indigo-100 hover:text-indigo-700"
-                                        }`}
+                                        className={`h-4 w-4 cursor-pointer hover:text-indigo-100 ${project.favorite
+                                          ? "text-indigo-700"
+                                          : "text-indigo-100 hover:text-indigo-700"
+                                          }`}
                                         data-cy={`add-favorite-${index}`}
                                         viewBox="0 0 20 20"
                                         fill="currentColor"
@@ -257,11 +256,10 @@ export default function Projects() {
                                       <Tippy content={t("Mark as Favourite")}>
                                         <svg
                                           xmlns="http://www.w3.org/2000/svg"
-                                          className={`h-4 w-4 cursor-pointer hover:text-indigo-100 ${
-                                            project.favorite
-                                              ? "text-indigo-700"
-                                              : "text-indigo-100 hover:text-indigo-700"
-                                          }`}
+                                          className={`h-4 w-4 cursor-pointer hover:text-indigo-100 ${project.favorite
+                                            ? "text-indigo-700"
+                                            : "text-indigo-100 hover:text-indigo-700"
+                                            }`}
                                           data-cy={`add-favorite-${index}`}
                                           viewBox="0 0 20 20"
                                           fill="currentColor"
@@ -319,10 +317,9 @@ export default function Projects() {
                                     {({ open }) => (
                                       <>
                                         <Menu.Button
-                                          className={`w-8 h-8 bg-white inline-flex items-center justify-center text-gray-400 rounded-full hover:text-gray-500 focus:outline-none ${
-                                            open &&
+                                          className={`w-8 h-8 bg-white inline-flex items-center justify-center text-gray-400 rounded-full hover:text-gray-500 focus:outline-none ${open &&
                                             "ring-2 ring-offset-2 ring-purple-500"
-                                          }`}
+                                            }`}
                                         >
                                           <span className="sr-only">
                                             {t("Open options")}
@@ -347,11 +344,11 @@ export default function Projects() {
                                             style={
                                               data?.data?.length - 1 ===
                                                 index &&
-                                              data?.data?.length !== 1
+                                                data?.data?.length !== 1
                                                 ? {
-                                                    transform:
-                                                      "translateY(-55%)",
-                                                  }
+                                                  transform:
+                                                    "translateY(-55%)",
+                                                }
                                                 : {}
                                             }
                                             className="mx-3 cursor-pointer origin-top-right absolute right-7 top-0 w-48 mt-1 rounded-md shadow-lg z-10 bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-200 focus:outline-none"

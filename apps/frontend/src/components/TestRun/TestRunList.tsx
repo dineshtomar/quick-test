@@ -11,7 +11,7 @@ import {
 } from "../Utils/constants/page-routes";
 import i18next from "i18next";
 import { useTranslation } from "react-i18next";
-import { useInfiniteQuery } from "react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { getTestRunDetails } from "../../services/testRunServices";
 import { showError } from "../Toaster/ToasterFun";
 import Table from "./component/Table";
@@ -38,20 +38,19 @@ export default function TestRunList({ projectName }: any) {
     refetch,
     error,
     isFetchingNextPage,
-  } = useInfiniteQuery(
-    ["testrun-data", pid],
-    ({ pageParam }) =>
+  } = useInfiniteQuery({
+    queryKey: ["testrun-data", pid],
+    queryFn: ({ pageParam }) =>
       getTestRunDetails({
         pid,
         pageNum: pageParam ?? 1,
       }),
-    {
-      getNextPageParam: (lastPage) =>
-        lastPage.prevOffSet > lastPage.data.meta.pageCount
-          ? undefined
-          : lastPage.prevOffSet,
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) => {
+      return lastPage.prevOffSet > lastPage.data.meta.pageCount
+        ? undefined : lastPage.prevOffSet
     }
-  );
+  });
 
   const testRunData = data?.pages.reduce((acc, page) => {
     return [...acc, ...page.data.data];

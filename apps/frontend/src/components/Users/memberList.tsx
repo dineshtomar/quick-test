@@ -7,7 +7,7 @@ import "tippy.js/dist/tippy.css";
 
 import i18next from "i18next";
 import { useTranslation } from "react-i18next";
-import { useInfiniteQuery } from "react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { getUserProfileDetails } from "../../services/profileServices";
 import Button from "../Button";
 import Loader from "../Loader/Loader";
@@ -48,19 +48,19 @@ const MemberList = () => {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useInfiniteQuery(
-    ["users-data"],
-    ({ pageParam }) =>
+  } = useInfiniteQuery({
+    queryKey: ["users-data"],
+    queryFn: ({ pageParam }) =>
       getUserProfileDetails({
         pageNum: pageParam ?? 1,
       }),
-    {
-      getNextPageParam: (lastPage) =>
-        lastPage?.prevOffSet > lastPage.data.meta.pageCount
-          ? undefined
-          : lastPage?.prevOffSet,
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) => {
+      return lastPage?.prevOffSet > lastPage.data.meta.pageCount
+        ? undefined
+        : lastPage?.prevOffSet;
     }
-  );
+  });
 
   const userData = data?.pages.reduce((acc, page) => {
     return [...acc, ...page.data.data];
@@ -229,8 +229,8 @@ const MemberList = () => {
                       {user.roleId === RoleId.OWNER
                         ? t("Owner")
                         : user.roleId === RoleId.ADMIN
-                        ? t("Admin")
-                        : t("Member")}
+                          ? t("Admin")
+                          : t("Member")}
                     </td>
 
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium flex justify-center">

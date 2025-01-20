@@ -18,7 +18,7 @@ import {
 } from "../../../../components/Toaster/ToasterFun";
 import { ToastMessage } from "../../../../components/Utils/constants/misc";
 import Loader from "../../../../components/Loader/Loader";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import Tippy from "@tippyjs/react";
 
 export default function ProjectMembers(props: any) {
@@ -29,23 +29,42 @@ export default function ProjectMembers(props: any) {
   const cancelButtonRef = useRef(null);
   const [isLoading, setLoading] = useState(false);
 
+  // const {
+  //   data: members,
+  //   refetch,
+  //   error,
+  // } = useQuery(
+  //   ["project-members"],
+  //   () => getAssignedProjectMembers(props?.pid),
+  //   {
+  //     enabled: false,
+  //     onSuccess: () => {
+  //       setLoading(false);
+  //     },
+  //     onSettled: () => {
+  //       setLoading(false);
+  //     },
+  //   }
+  // );
+
+  const fetchAssignedProjectMembers = (pid: string) => getAssignedProjectMembers(pid);
+
+
   const {
     data: members,
     refetch,
     error,
-  } = useQuery(
-    ["project-members"],
-    () => getAssignedProjectMembers(props?.pid),
-    {
-      enabled: false,
-      onSuccess: () => {
-        setLoading(false);
-      },
-      onSettled: () => {
-        setLoading(false);
-      },
-    }
-  );
+    isSuccess,
+    isError
+  } = useQuery({
+    queryKey: ["project-members"], // Query key
+    queryFn: () => fetchAssignedProjectMembers(props?.pid),  // Query function
+    enabled: false, // Disable the query on mount
+  });
+
+  if (isSuccess || isError) {
+    setLoading(false); // Handle success
+  }
 
   const fetchData = useCallback(() => {
     setLoading(true);
@@ -107,8 +126,8 @@ export default function ProjectMembers(props: any) {
                   <table className="min-w-full divide-y divide-gray-300 px-2 2xl:pl-48">
                     <tbody className="divide-y divide-gray-200">
                       {members &&
-                      members !== undefined &&
-                      members.length > 0 ? (
+                        members !== undefined &&
+                        members.length > 0 ? (
                         members.map((member: any) => (
                           <tr key={member["fullName"]}>
                             <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">

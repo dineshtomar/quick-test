@@ -1,6 +1,6 @@
 import Tippy from "@tippyjs/react";
 import React, { useCallback, useState } from "react";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import "tippy.js/dist/tippy.css";
 import { getArchiveProjects } from "../../services/archivePageServices";
 import AccessControl from "../AccessControl";
@@ -35,7 +35,10 @@ const ArchivedProjects = () => {
     error,
     refetch,
     isLoading,
-  } = useQuery("archiveProjects", getArchiveProjects);
+  } = useQuery({
+    queryKey: ["archiveProjects"], // This is your query key
+    queryFn: getArchiveProjects,  // This is the function to fetch data
+  });
 
   if (error instanceof Error) {
     const errorMessage =

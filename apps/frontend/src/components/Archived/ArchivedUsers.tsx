@@ -7,7 +7,7 @@ import Tippy from "@tippyjs/react";
 import dayjs from "dayjs";
 import React, { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { getArchiveMembers } from "../../services/archiveUsers";
 import AccessControl from "../AccessControl";
 import ConfirmModal from "../Common/ConfirmModal";
@@ -31,7 +31,10 @@ const ArchivedUsers = () => {
     isLoading,
     error,
     refetch,
-  } = useQuery("archiveMembers", getArchiveMembers);
+  } = useQuery({
+    queryKey: ["archiveMembers"], // This is your query key
+    queryFn: getArchiveMembers,  // This is the function to fetch data
+  });
 
   const openConfirmationModal = (
     e: React.MouseEvent<HTMLButtonElement>,
