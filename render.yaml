@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: quick-test-backend
+    env: node
+    buildCommand: |
+      npm install
+      npx playwright install-deps
+      npx playwright install chromium
+      npm run build  # If you have a build step
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD
+        value: "0"
+    plan: free  # or starter/standard/etc depending on your needs
+    autoDeploy: true
+    healthCheckPath: /health  # Adjust based on your app's health check endpoint
+    disk:
+      name: tmp
+      mountPath: /tmp
+      sizeGB: 1  # Adjust based on your needs
