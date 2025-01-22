@@ -12,7 +12,7 @@
     "frontend:build:dev": "nx run quick-test-frontend",
     "frontend:start:prod": "nx run quick-test-frontend:release",
     "frontend:start:dev": "nx run quick-test-frontend",
-    "docker:build": "docker-compose up --build"
+    "docker:build": "docker compose build"
   },
   "private": true,
   "dependencies": {
