@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import "tippy.js/dist/tippy.css";
 import Button from "../Button";
 import Loader from "../Loader/Loader";
 import { ToastMessage } from "../Utils/constants/misc";

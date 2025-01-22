@@ -19,7 +19,7 @@ import {
 import { ToastMessage } from "../../../../components/Utils/constants/misc";
 import Loader from "../../../../components/Loader/Loader";
 import { useQuery } from "@tanstack/react-query";
-import Tippy from "@tippyjs/react";
+import { Tooltip } from "react-tooltip";
 
 export default function ProjectMembers(props: any) {
   const [open, setOpen] = useState(false);
@@ -29,42 +29,15 @@ export default function ProjectMembers(props: any) {
   const cancelButtonRef = useRef(null);
   const [isLoading, setLoading] = useState(false);
 
-  // const {
-  //   data: members,
-  //   refetch,
-  //   error,
-  // } = useQuery(
-  //   ["project-members"],
-  //   () => getAssignedProjectMembers(props?.pid),
-  //   {
-  //     enabled: false,
-  //     onSuccess: () => {
-  //       setLoading(false);
-  //     },
-  //     onSettled: () => {
-  //       setLoading(false);
-  //     },
-  //   }
-  // );
-
-  const fetchAssignedProjectMembers = (pid: string) => getAssignedProjectMembers(pid);
-
-
   const {
     data: members,
     refetch,
     error,
-    isSuccess,
-    isError
   } = useQuery({
-    queryKey: ["project-members"], // Query key
-    queryFn: () => fetchAssignedProjectMembers(props?.pid),  // Query function
+    queryKey: ["project-members"],
+    queryFn: () => getAssignedProjectMembers(props?.pid),
     enabled: false, // Disable the query on mount
   });
-
-  if (isSuccess || isError) {
-    setLoading(false); // Handle success
-  }
 
   const fetchData = useCallback(() => {
     setLoading(true);
@@ -137,22 +110,27 @@ export default function ProjectMembers(props: any) {
                               {member["email"]}
                             </td>
                             <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
-                              <div className="text-indigo-600 hover:text-indigo-900 cursor-pointer">
-                                <Tippy content="Delete">
-                                  <TrashIcon
-                                    onClick={() => getConfirmation(member)}
-                                    className="w-4 h-8 text-red-400"
-                                  />
-                                </Tippy>
-                              </div>
+                              {/* <div className="text-indigo-600 hover:text-indigo-900 cursor-pointer"> */}
+                              <TrashIcon
+                                data-tooltip-id="delete-id"
+                                data-tooltip-content="Delete"
+                                onClick={() => getConfirmation(member)}
+                                className="w-4 h-8 text-red-400"
+                              />
+                              {/* </div> */}
                             </td>
                           </tr>
                         ))
                       ) : (
-                        <div className="text-center p-10">No Member Found</div>
+                        <tr >
+                          <td className="text-center p-10">
+                            No Member Found
+                          </td>
+                        </tr>
                       )}
                     </tbody>
                   </table>
+                  <Tooltip id="delete-id" />
                 </div>
               </div>
             </section>
