@@ -6,7 +6,6 @@ WORKDIR /app/builder
 COPY package*.json ./
 
 # Install Python and other dependencies required by node-gyp
-# RUN apk add --update python3 make g++ && rm -rf /var/cache/apk/*
 
 RUN apk add --update python3 py3-pip build-base g++ && rm -rf /var/cache/apk/*
 
@@ -27,6 +26,7 @@ FROM node:22.12.0-alpine
 
 WORKDIR /app
 COPY --from=builder /app/builder/dist/apps/backend ./dist
+COPY --from=builder /app/builder/apps/backend/src/i18n ./dist/apps/backend/i18n
 COPY --from=builder /app/builder/node_modules ./node_modules
 
 CMD ["node", "dist/main.js"]
