@@ -1,11 +1,14 @@
 services:
   - type: web
     name: quick-test
-    env: node
-    buildCommand: |
-      npm install
+    runtime: node
+    prebuildCommand: |
+      npm ci
       npx playwright install
-    startCommand: npm start
+    buildCommand: npm install && npm run backend:build:prod
+    startCommand: npm run backend:start:prod
     envVars:
       - key: PLAYWRIGHT_BROWSERS_PATH
         value: 0
+      - key: CI
+        value: true
