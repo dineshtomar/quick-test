@@ -1,4 +1,4 @@
-FROM node:22.12.0-alpine AS builder
+FROM node:22.12.0 AS builder
 
 WORKDIR /app/builder
 
@@ -6,7 +6,6 @@ WORKDIR /app/builder
 COPY package*.json ./
 
 # Install Python and other dependencies required by node-gyp
-
 RUN apk add --update python3 py3-pip build-base g++ && rm -rf /var/cache/apk/*
 
 # Install dependencies, including Nx
@@ -22,7 +21,7 @@ RUN npm install -g nx
 # Build the application without using cache
 RUN npm run backend:build:prod --configuration=production --skip-nx-cache
 
-FROM node:22.12.0-alpine
+FROM node:22.12.0
 
 WORKDIR /app
 COPY --from=builder /app/builder/dist/apps/backend ./dist
