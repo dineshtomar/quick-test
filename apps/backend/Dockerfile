@@ -6,7 +6,7 @@ WORKDIR /app/builder
 COPY package*.json ./
 
 # Install Python and other dependencies required by node-gyp
-RUN apk add --update python3 py3-pip build-base g++ && rm -rf /var/cache/apk/*
+# RUN apk add --update python3 py3-pip build-base g++ && rm -rf /var/cache/apk/*
 
 # Install dependencies, including Nx
 RUN npm ci
